@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { Form,Button,Container } from 'react-bootstrap';
 import Autosuggest from "react-autosuggest"
-import {regionList} from "../API/http"
+import {regionList,districtList,cityList} from "../API/http"
 import './app.css'
 
 
@@ -9,9 +10,8 @@ const getSuggestionValue = suggestion => suggestion;
 
 const renderSuggestion = suggestion => (
   <span>
-    
+    {console.log(suggestion)}
     {suggestion}
-    
   </span>
 );
 
@@ -33,7 +33,8 @@ const renderSuggestion = suggestion => (
     }
 
     onSuggestionsFetchRequested = ({ value }) => {
-        this.setState({
+      console.log(value)  
+      this.setState({
           suggestions: this.getSuggestions(value)
         });
       };
@@ -55,40 +56,21 @@ const renderSuggestion = suggestion => (
       const inputValue = value.trim().toLowerCase();
       const inputLength = inputValue.length;
 
-      let {region} = this.state
+      let {suggestions} = this.state
+      console.log(suggestions)
      
-      if(region == undefined) {return region = "" } else {
-        return inputLength === 0 ? [] : region.filter(lang =>
+      if(suggestions == undefined) {return suggestions = "" } else {
+        return inputLength === 0 ? [] : suggestions.filter(lang =>
           lang.toLowerCase().slice(0, inputLength) === inputValue
           
         );
         
       }  
     }
-
-    submitHandler = e =>{
-        e.preventDefault()
-        console.log(this.state)
-
-        let payload = {
-          "region": this.state.region
-      }
-
-      regionList(payload).then(
-        data => {
-          if(data.error) {
-            console.log(data.error)
-          }
-          let {regions} = data;
-          this.setState({region: regions})
-        }
-      )
-
-    }
-
     render() {
 
         const { value, suggestions } = this.state;
+        console.log(suggestions)
 
         const inputProps = {
           placeholder: 'Введите область',
@@ -100,31 +82,103 @@ const renderSuggestion = suggestion => (
 
 
 
-                <form onSubmit = {this.submitHandler}>
-                  {
-                  this.submitHandler}
+                <form >
                     <div>
                         Город <input type = "text" name = "city" value = {this.state.city} onChange = {this.changeHandler}/>
                     </div>
                     <div>
                         Район<input type = "text" name = "district" value = {this.state.district} onChange = {this.changeHandler}/>
                     </div>
-                    <div>
-                       Область <input type = "text" name = "region" value = {this.state.region} onChange = {this.changeHandler} />
-                    </div>
+                   
                     
-                    <button type = "submit">Submit</button>
+                    
 
-
+                    
                     <Autosuggest 
+                    
                     suggestions={suggestions}
                     onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
                     onSuggestionsClearRequested={this.onSuggestionsClearRequested}
                     getSuggestionValue={getSuggestionValue}
-                    renderSuggestion={renderSuggestion}
-                    inputProps={inputProps} />
+                    renderSuggestion={(suggestions)=>(
+                      <span>
+                      {console.log(suggestions)}
+                      {suggestions}
+                      </span>)
+                      
+                    }
+                    inputProps={{
+                      id: "region",
+                      name: "region",
+                      value: this.state.region,
+                      placeholder: "Область",
+                      onChange: (_event, {newValue}) =>{
+                        _event.preventDefault()
+                          let payload = {
+                            "region": newValue
+                        }
+
+                        regionList(payload).then(
+                          data => {
+                            if(data.error) {
+                              console.log(data.error)
+                            }
+                            let {regions} = data;
+                            console.log(regions)
+                            this.setState({suggestions: regions})
+                          }
+                        )
+
+                        this.setState({region: newValue});
+                    }}}/>
+
+                   {/* <Autosuggest 
                     
-                </form>
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                    getSuggestionValue={getSuggestionValue}
+                    renderSuggestion={(suggestions)=>(
+                      <span>
+                      {console.log(suggestions)}
+                      {suggestions}
+                      </span>)
+                      
+                    }
+                    inputProps={{
+                      id: "district",
+                      name: "district",
+                      value: this.state.district,
+                      placeholder: "Район",
+                      onChange: (_event, {newValue}) =>{
+                        _event.preventDefault()
+                          let payload = {
+                            "region": this.state.region,
+                            "district" : newValue
+                        }
+
+                        districtList(payload).then(
+                          data => {
+                            if(data.error) {
+                              console.log(data.error)
+                            }
+                            let {regions} = data;
+                            console.log(regions)
+                            this.setState({suggestions: regions})
+                          }
+                        )
+
+                        this.setState({region: newValue});
+                    }}}
+                    
+                     /> */}
+              }
+                
+                     </form>
+
+                    
+                    
+                
         )
     }
 }
