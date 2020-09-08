@@ -21,7 +21,7 @@ export const districtList = (payload) => {
     return axios.post('http://altproduction.ru:8080/rest/v1/district/',JSON.stringify(payload))
 .then(response => {
         console.log(response)
-        return response.data 
+        return response.data
 })
 .catch(error => {
         console.log(error)
@@ -30,11 +30,9 @@ export const districtList = (payload) => {
 }
 
 export const cityList = (payload) => {
-
-
     return axios.post('http://altproduction.ru:8080/rest/v1/city/',JSON.stringify(payload))
 .then(response => {
-        console.log(response)
+        console.log(response.data.city)
         return response.data 
 })
 .catch(error => {

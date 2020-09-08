@@ -5,6 +5,14 @@ body {
   .react-autosuggest__container {
     position: absolute;
   }
+
+  .container{
+    display: flex;
+  }
+
+  .react-autosuggest__container{
+    position: initial;
+  }
   
   .react-autosuggest__input {
     width: 240px;
@@ -35,6 +43,7 @@ body {
     position: absolute;
     top: 51px;
     width: 280px;
+    max-height:400px;
     border: 1px solid #aaa;
     background-color: #fff;
     font-family: Helvetica, sans-serif;
@@ -58,4 +67,8 @@ body {
   
   .react-autosuggest__suggestion--highlighted {
     background-color: #ddd;
+  }
+
+  .sdfmsdfbvb {
+    display: flex;
   }
